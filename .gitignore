@@ -26,3 +26,7 @@
 *.exe
 *.out
 *.app
+ConsoleApplication4/ConsoleApplication4/Release/
+*.ipdb
+ConsoleApplication4/Release/
+ConsoleApplication4/ConsoleApplication4/Debug/
