@@ -56,7 +56,7 @@ namespace RPN
 
 	void setXmmVariable(asmjit::X86Compiler &c, asmjit::XmmVar &v, float d) {
 		asmjit::X86GpVar temp = c.newGpVar();
-		uint64_t *dd = (uint64_t *)(&d);
+		uint32_t *dd = (uint32_t *)(&d);
 		c.mov(temp, *dd);
 		c.movq(v, temp.m());
 		c.unuse(temp);

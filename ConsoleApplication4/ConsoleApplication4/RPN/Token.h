@@ -43,6 +43,7 @@ namespace RPN
 
 		virtual void Parse(ParserContext &) {}
 
+		virtual bool compilable() { return false; }
 		virtual asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) 
 		{
 			using namespace asmjit;
@@ -84,10 +85,12 @@ namespace RPN
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
-			X86XmmVar out(c, kX86VarTypeXmm, "Value");
+			X86XmmVar out(c);
 			setXmmVariable(c, out, _value);
 			return out;
 		}
+
+		bool compilable() override { return true; }
 	protected:
 		float _value;
 	};

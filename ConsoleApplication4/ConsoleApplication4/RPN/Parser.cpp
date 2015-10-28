@@ -149,10 +149,13 @@ std::unique_ptr<Token> ParserContext::popAndParseToken()
 	output.pop_back();
 	op->Parse(*this);
 
+/*
+#ifndef _DEBUG
 	//optimize, cull tree
 	if (op->type() != Token::Type::Variable && op->constant())
 		op.reset(new Value(op->value()));
-
+#endif
+	*/
 	return op;
 }
 
@@ -284,5 +287,22 @@ Parser::Parser()
 
 Parser::FunctionPtr Parser::Compile(const std::string& text)
 {
+	using namespace asmjit;
+	auto token = Parse(text);
 
+	if (!token->compilable())
+		return nullptr;
+
+	static JitRuntime runtime; //this could be better
+	StringLogger logger;
+	X86Compiler c(&runtime);
+	c.setLogger(&logger);
+
+
+	c.addFunc(kFuncConvHost, FuncBuilder0<float>());
+	c.ret(token->Compile(c));
+	c.endFunc();
+
+
+	return asmjit_cast<FunctionPtr>(c.make());
 }
