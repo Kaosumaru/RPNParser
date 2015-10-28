@@ -3,7 +3,6 @@
 #include "Function.h"
 #include "MiscTokens.h"
 #include "Utils.h"
-//#include "Script/MXScriptClassParser.h"
 #include <map>
 
 using namespace RPN;
@@ -138,54 +137,7 @@ namespace RPN
 		return false;
 	}
 
-	/*
-	bool rule_variable(Parser::Context &context)
-	{
-		auto peek = context.input.peek();
-		if (peek != '&')
-			return false;
 
-		
-		context.input.get();
-
-		int parenthesis_count = 0;
-		auto charsAllowedInVarName = [&](char c, int index) 
-		{ 
-			bool allowed = isalnum(c) || (index != 0 && c == '.') || c == '_';
-			if (allowed)
-				return true;
-			if (c == ')' && --parenthesis_count >= 0)
-				return true;
-			if (c == '(' && index == 0)
-			{
-				parenthesis_count++;
-				return true;
-			}
-			return false;
-		};
-
-		std::string str = eat_string_in_stream(context.input, charsAllowedInVarName);
-
-
-		auto &ret = MX::Script::object(str);
-
-
-		class ScriptVariable : public Token
-		{
-		public:
-			ScriptVariable(const MX::Scriptable::Value::pointer& value) : _value(value) {}
-
-			bool constant() override { return false; }
-			float value() override { return *_value; }
-			std::string stringValue() override { return _value->atext(); }
-		protected:
-			MX::Scriptable::Value::pointer _value;
-		};
-
-		context.AddToken(new ScriptVariable(ret));
-
-		return true;
-	}*/
 
 }
 
@@ -326,7 +278,6 @@ Parser::Parser()
 	_rules.push_back(rule_string);
 	_rules.push_back(rule_short_operator);
 	_rules.push_back(rule_long_operator);
-	//_rules.push_back(rule_variable);
 	_rules.push_back(embedded_function);
 	
 }
