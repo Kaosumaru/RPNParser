@@ -11,3 +11,8 @@ include_directories ("${PROJECT_SOURCE_DIR}/../RPN")
 
 add_executable (Tests main.cpp)
 target_link_libraries (Tests RPN)
+
+if (MSVC)
+else()
+target_compile_options( Tests PUBLIC -std=c++11 )
+endif(MSVC)
