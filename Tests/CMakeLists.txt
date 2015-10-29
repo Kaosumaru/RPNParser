@@ -8,18 +8,10 @@ else()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(MSVC)
 
-
-
-set(ASMJIT_EMBED TRUE)
-add_Definitions(-DASMJIT_STATIC)
-set(ASMJIT_DIR ${PROJECT_SOURCE_DIR}/../asmjit/ )
-Include("${ASMJIT_DIR}/CMakeLists.txt")
-include_directories ("${PROJECT_SOURCE_DIR}/src/")
-
 add_subdirectory(../RPN "${CMAKE_CURRENT_BINARY_DIR}/RPN")
-include_directories ("${PROJECT_SOURCE_DIR}/../RPN")
+include_directories ("${RPN_Includes}")
 
-add_executable (Tests main.cpp ${ASMJIT_SRC})
+add_definitions(-DASMJIT_STATIC)
+add_executable (Tests main.cpp)
+target_Link_Libraries(Tests ${RPN_Deps})
 target_link_libraries (Tests RPN)
-
-target_Link_Libraries(Tests ${ASMJIT_DEPS})

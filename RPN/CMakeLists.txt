@@ -31,10 +31,18 @@ endif(MSVC)
 
 ##folders
 add_folder(RPN)
-add_library(RPN ${SRCS})
+
+set(ASMJIT_EMBED TRUE)
+add_definitions(-DASMJIT_STATIC)
+set(ASMJIT_DIR ${PROJECT_SOURCE_DIR}/../asmjit/ )
+include("${ASMJIT_DIR}/CMakeLists.txt")
+
+set(RPN_Includes ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR} ${ASMJIT_DIR}/src/ PARENT_SCOPE)
+set(RPN_Deps ${ASMJIT_DEPS} PARENT_SCOPE)
+
+add_library(RPN ${SRCS} ${ASMJIT_SRC})
 
 ##dependencies
 
-include_directories( ${PROJECT_SOURCE_DIR} )
 ##find_package(allegro REQUIRED)
 ##message(STATUS "Using SDL, include: ${SDL_INCLUDE_DIR}")
