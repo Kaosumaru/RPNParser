@@ -14,14 +14,19 @@ addons:
     - g++-4.8
     - clang
 
-install:
-  - wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
+before_install:
+  # Get CMake 3.1
+  - wget https://github.com/Viq111/travis-container-packets/releases/download/cmake-3.1.2/cmake.tar.bz2
+  - tar -xjf cmake.tar.bz2
+  - rm cmake.tar.bz2
+  - export PATH=$(pwd)/cmake/bin:$PATH
+
 
 before_script:
   - mkdir build
   - cd build
-  - ./cmake-3.1.0-Linux-x86_64/bin/cmake --version
-  - ./cmake-3.1.0-Linux-x86_64/bin/cmake ../Tests -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+  - cmake --version
+  - cmake ../Tests -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   - cd ..
 
 script:
