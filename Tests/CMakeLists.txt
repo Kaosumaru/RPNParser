@@ -5,6 +5,7 @@ project (Tests)
 if (MSVC)
 add_definitions( "/W3 /D_CRT_SECURE_NO_WARNINGS /wd4018 /wd4005 /wd4996 /nologo" )
 else()
+add_definitions(-DPLATFORM_NOT_VS)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif(MSVC)
 

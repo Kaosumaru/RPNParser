@@ -24,8 +24,8 @@ namespace RPN
 		TokenPtr Parse(const std::string& text)
 		{
 			Context context;
-			context.input = std::stringstream(text);
-			
+			context.input.str(text);
+
 			while (true)
 			{
 				if (context.error || context.input.eof())

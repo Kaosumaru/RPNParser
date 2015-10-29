@@ -19,7 +19,7 @@ namespace RPN
 
 	namespace impl
 	{
-#ifdef MX_PLATFORM_XCODE
+#ifdef PLATFORM_NOT_VS
         template<typename T> struct remove_class { };
         template<typename C, typename R, typename... A>
         struct remove_class<R(C::*)(A...)> { using type = R(A...); };
@@ -29,7 +29,7 @@ namespace RPN
         struct remove_class<R(C::*)(A...) volatile> { using type = R(A...); };
         template<typename C, typename R, typename... A>
         struct remove_class<R(C::*)(A...) const volatile> { using type = R(A...); };
-        
+
         template<typename T>
         struct get_signature_impl {
             using type = typename remove_class<
@@ -52,7 +52,7 @@ namespace RPN
         struct remove_class<R(C::*)(A...) volatile> { using type = R(typename A...); };
         template<typename C, typename R, typename... A>
         struct remove_class<R(C::*)(A...) const volatile> { using type = R(typename A...); };
-        
+
         template<typename T>
         struct get_signature_impl {
             using type = typename remove_class<
@@ -128,7 +128,7 @@ namespace RPN
 
 
 	};
-    
+
 
 	template<typename R, typename... Args>
 	class GenericFunction<std::function<R(Args...)>> : public Function
@@ -151,8 +151,8 @@ namespace RPN
 			}
 		}
 
-		float value() override 
-		{ 
+		float value() override
+		{
 			return calculateValue(typename impl::gens<arity>::type());;
 		}
 
