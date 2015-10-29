@@ -164,9 +164,9 @@ void TestFloat()
 }
 
 #ifdef _DEBUG
-unsigned times = 10000;
+unsigned times = 100000;
 #else
-unsigned times = 1000000;
+unsigned times = 10000000;
 #endif
 
 float res = 1.1f;
@@ -194,7 +194,6 @@ void TestParser(const std::string &expr)
 			{
 
 				for (unsigned i = 1; i < times; i++)
-					for (unsigned i2 = 1; i2 < 10; i2++)
 						res *= p->value();
 			}
 
@@ -212,7 +211,6 @@ void TestParser(const std::string &expr)
 			{
 
 				for (unsigned i = 1; i < times; i++)
-					for (unsigned i2 = 1; i2 < 10; i2++)
 						res *= f();
 			}
 
@@ -239,7 +237,7 @@ void TestComp(const std::string &expr)
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::string expr = "2 * 3 * 2 + 32 * (6 + 6)";
+	std::string expr = "0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0*0";
 
 	TestParser(expr);
 
