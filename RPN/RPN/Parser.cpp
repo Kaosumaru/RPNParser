@@ -3,7 +3,6 @@
 #include "Function.h"
 #include "MiscTokens.h"
 #include "Utils.h"
-//#include "Script/MXScriptClassParser.h"
 #include <map>
 
 using namespace RPN;
@@ -108,7 +107,7 @@ namespace RPN
 		};
 
 
-		
+
 		for (auto &pair : strToToken)
 		{
 			if (!eat_string_in_stream_if_equal(context.input, pair.first))
@@ -133,74 +132,33 @@ namespace RPN
 			context.AddToken(token);
 			return true;
 		}
-			
+
 		context.input.seekg(position);
 		return false;
 	}
 
-	/*
-	bool rule_variable(Parser::Context &context)
-	{
-		auto peek = context.input.peek();
-		if (peek != '&')
-			return false;
 
-		
-		context.input.get();
-
-		int parenthesis_count = 0;
-		auto charsAllowedInVarName = [&](char c, int index) 
-		{ 
-			bool allowed = isalnum(c) || (index != 0 && c == '.') || c == '_';
-			if (allowed)
-				return true;
-			if (c == ')' && --parenthesis_count >= 0)
-				return true;
-			if (c == '(' && index == 0)
-			{
-				parenthesis_count++;
-				return true;
-			}
-			return false;
-		};
-
-		std::string str = eat_string_in_stream(context.input, charsAllowedInVarName);
-
-
-		auto &ret = MX::Script::object(str);
-
-
-		class ScriptVariable : public Token
-		{
-		public:
-			ScriptVariable(const MX::Scriptable::Value::pointer& value) : _value(value) {}
-
-			bool constant() override { return false; }
-			float value() override { return *_value; }
-			std::string stringValue() override { return _value->atext(); }
-		protected:
-			MX::Scriptable::Value::pointer _value;
-		};
-
-		context.AddToken(new ScriptVariable(ret));
-
-		return true;
-	}*/
 
 }
 
 std::unique_ptr<Token> ParserContext::popAndParseToken()
 {
 	if (output.empty())
+    {
+        error = true;
 		return nullptr;
+    }
 	auto op = std::move(output.back());
 	output.pop_back();
 	op->Parse(*this);
 
+/*
+#ifndef _DEBUG
 	//optimize, cull tree
 	if (op->type() != Token::Type::Variable && op->constant())
 		op.reset(new Value(op->value()));
-
+#endif
+	*/
 	return op;
 }
 
@@ -223,7 +181,7 @@ void ParserContext::AddToken(Token* token)
 
 	if (token->type() == Token::Type::FunctionArgumentSeparator)
 	{
-		//Until the token at the top of the stack is a left parenthesis, pop operators off the stack onto the output queue. 
+		//Until the token at the top of the stack is a left parenthesis, pop operators off the stack onto the output queue.
 		//If no left parentheses are encountered, either the separator was misplaced or parentheses were mismatched.
 
 		while (!operator_stack.empty() && operator_stack.top()->type() != Token::Type::LeftParenthesis)
@@ -326,7 +284,28 @@ Parser::Parser()
 	_rules.push_back(rule_string);
 	_rules.push_back(rule_short_operator);
 	_rules.push_back(rule_long_operator);
-	//_rules.push_back(rule_variable);
 	_rules.push_back(embedded_function);
-	
+
+}
+
+Parser::FunctionPtr Parser::Compile(const std::string& text)
+{
+	using namespace asmjit;
+	auto token = Parse(text);
+
+	if (!token->compilable())
+		return nullptr;
+
+	static JitRuntime runtime; //this could be better
+	StringLogger logger;
+	X86Compiler c(&runtime);
+	c.setLogger(&logger);
+
+
+	c.addFunc(kFuncConvHost, FuncBuilder0<float>());
+	c.ret(token->Compile(c));
+	c.endFunc();
+
+
+	return asmjit_cast<FunctionPtr>(c.make());
 }

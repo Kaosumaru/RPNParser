@@ -4,6 +4,9 @@
 #include <vector>
 #include <stack>
 #include <sstream>
+#include <asmjit/asmjit.h>
+#include <cassert>
+#include "Utils.h"
 
 namespace RPN
 {
@@ -39,6 +42,16 @@ namespace RPN
 		virtual Type type() { return Type::Variable; }
 
 		virtual void Parse(ParserContext &) {}
+
+		virtual bool compilable() { return false; }
+		virtual asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) 
+		{
+			using namespace asmjit;
+			assert(false);
+			X86XmmVar out(c, kX86VarTypeXmm, "Value");
+			setXmmVariable(c, out, value());
+			return out;
+		}
 	};
 
 	typedef std::unique_ptr<Token> TokenPtr;
@@ -68,6 +81,16 @@ namespace RPN
 		Value(float value) : _value(value) {}
 
 		float value() override { return _value; }
+
+		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
+		{
+			using namespace asmjit;
+			X86XmmVar out(c);
+			setXmmVariable(c, out, _value);
+			return out;
+		}
+
+		bool compilable() override { return true; }
 	protected:
 		float _value;
 	};

@@ -54,6 +54,13 @@ namespace RPN
 		return std::string(buffer.get(), length);
 	}
 
+	void setXmmVariable(asmjit::X86Compiler &c, asmjit::XmmVar &v, float d) {
+		asmjit::X86GpVar temp = c.newGpVar();
+		uint32_t *dd = (uint32_t *)(&d);
+		c.mov(temp, *dd);
+		c.movd(v, temp.m());
+		c.unuse(temp);
+	}
 
 }
 

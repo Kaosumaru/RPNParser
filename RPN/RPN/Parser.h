@@ -16,8 +16,8 @@ namespace RPN
 	{
 	public:
 		using Context = ParserContext;
-		typedef std::function<bool(Context &context)> ParsingRule;
-
+		using ParsingRule = std::function<bool(Context &context)>;
+		using FunctionPtr = float(*)();
 
 		Parser();
 
@@ -61,9 +61,13 @@ namespace RPN
 			}
 
 			auto ret = context.popAndParseToken();
-			assert(ret);
+			if (!ret || context.error || !context.output.empty())
+                return nullptr;
+
 			return ret;
 		}
+
+		FunctionPtr Compile(const std::string& text);
 
 
 		static Parser& Default()
