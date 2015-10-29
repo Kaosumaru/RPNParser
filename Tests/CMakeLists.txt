@@ -11,9 +11,14 @@ endif(MSVC)
 add_subdirectory(../RPN "${CMAKE_CURRENT_BINARY_DIR}/RPN")
 include_directories ("${PROJECT_SOURCE_DIR}/../RPN")
 
-#set(ASMJIT_EMBED TRUE)
-add_subdirectory(../asmjit "${CMAKE_CURRENT_BINARY_DIR}/asmjit")
-include_directories ("${PROJECT_SOURCE_DIR}/../asmjit/src/")
+set(ASMJIT_EMBED TRUE)
+add_Definitions(-DASMJIT_STATIC)
+set(ASMJIT_DIR ${PROJECT_SOURCE_DIR}/../asmjit/ )
+Include("${ASMJIT_DIR}/CMakeLists.txt")
+include_directories ("${PROJECT_SOURCE_DIR}/src/")
 
-add_executable (Tests main.cpp)
-target_link_libraries (Tests RPN asmjit)
+
+add_executable (Tests main.cpp ${ASMJIT_SRC})
+target_link_libraries (Tests RPN)
+
+target_Link_Libraries(YourTarget ${ASMJIT_DEPS})
