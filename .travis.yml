@@ -14,11 +14,14 @@ addons:
     - g++-4.8
     - clang
 
+install:
+  - wget -qO- http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-x86_64.tar.gz | tar xvz
+
 before_script:
   - mkdir build
   - cd build
-  - cmake --version
-  - cmake ../Tests -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+  - ./cmake-3.1.0-Linux-x86_64/bin/cmake --version
+  - ./cmake-3.1.0-Linux-x86_64/bin/cmake ../Tests -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
   - cd ..
 
 script:
