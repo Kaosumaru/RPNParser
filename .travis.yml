@@ -25,4 +25,4 @@ script:
   - cd build
   - make
   - cd ..
-  - ./build/Tests
+  - ./build/Tests -p -t

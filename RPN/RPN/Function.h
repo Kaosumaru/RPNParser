@@ -19,7 +19,7 @@ namespace RPN
 
 	namespace impl
 	{
-#ifdef PLATFORM_NOT_VS
+#ifndef _MSC_VER //not visual studio
         template<typename T> struct remove_class { };
         template<typename C, typename R, typename... A>
         struct remove_class<R(C::*)(A...)> { using type = R(A...); };
