@@ -21,4 +21,4 @@ include_directories ("${PROJECT_SOURCE_DIR}/src/")
 add_executable (Tests main.cpp ${ASMJIT_SRC})
 target_link_libraries (Tests RPN)
 
-target_Link_Libraries(YourTarget ${ASMJIT_DEPS})
+target_Link_Libraries(Tests ${ASMJIT_DEPS})
