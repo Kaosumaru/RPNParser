@@ -58,7 +58,7 @@ namespace RPN
 		asmjit::X86GpVar temp = c.newGpVar();
 		uint32_t *dd = (uint32_t *)(&d);
 		c.mov(temp, *dd);
-		c.movq(v, temp.m());
+		c.movd(v, temp.m());
 		c.unuse(temp);
 	}
 
