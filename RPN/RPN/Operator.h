@@ -57,7 +57,7 @@ namespace RPN
 	
 		int precedence() override { return 2; }
 
-		bool constant() override { return _tokens[0] && !_tokens[0]->constant() || _tokens[1] && !_tokens[1]->constant() ? false : true; }
+		bool constant() override { return (_tokens[0] && !_tokens[0]->constant()) || (_tokens[1] && !_tokens[1]->constant()) ? false : true; }
 
 		bool compilable() override 
 		{
