@@ -230,12 +230,22 @@ void TestParser(const std::string &expr)
 
 }
 
+void TestComp(const std::string &expr)
+{
+	using namespace std;
+	auto f = RPN::Parser::Default().Compile(expr);
+	cout << f() << endl;
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::string expr = "2 * 3 * 2 + 32 * (6 + 6)";
 
 	TestParser(expr);
-	
+
+
+	//TestComp("2 * 3");
+
 	system("PAUSE");
 	return 1;
 }
