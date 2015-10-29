@@ -35,8 +35,6 @@ add_library(RPN ${SRCS})
 
 ##dependencies
 
-find_package(Boost REQUIRED)
-include_directories( ${Boost_INCLUDE_DIRS} )
 include_directories( ${PROJECT_SOURCE_DIR} )
 ##find_package(allegro REQUIRED)
 ##message(STATUS "Using SDL, include: ${SDL_INCLUDE_DIR}")
