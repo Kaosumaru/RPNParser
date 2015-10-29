@@ -40,6 +40,14 @@ const lest::test specification[] =
 		EXPECT(TestValue("2+2", 4.0f));
 		EXPECT(TestValue("2+2*3", 8.0f));
 	},
+	CASE("Binary operators")
+	{
+		EXPECT(TestValue("2+2", 4.0f));
+		EXPECT(TestValue("2-2", 0.0f));
+		EXPECT(TestValue("2*3", 6.0f));
+		EXPECT(TestValue("6/3", 2.0f));
+
+	},
 };
 
 int main (int argc, char * argv[])
