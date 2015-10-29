@@ -24,12 +24,6 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vector2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2x.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RPN\Function.h">
       <Filter>Header Files</Filter>
     </ClInclude>
