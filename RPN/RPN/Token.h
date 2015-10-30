@@ -85,7 +85,7 @@ namespace RPN
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
-			X86XmmVar out(c);
+			X86XmmVar out(c, asmjit::kX86VarTypeXmmSs);
 			setXmmVariable(c, out, _value);
 			return out;
 		}

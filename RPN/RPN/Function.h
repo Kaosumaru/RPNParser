@@ -167,12 +167,13 @@ namespace RPN
 			static asmjit::X86XmmVar callFunction(asmjit::X86Compiler &c, FuncType func, const std::vector<asmjit::X86XmmVar>& args)
 			{
 				using namespace asmjit;
-				X86XmmVar out(c);
+				X86XmmVar out(c, kX86VarTypeXmmSs);
 
 				auto ctx = c.call((uint64_t)func, kFuncConvHost, FuncBuilderVariadic<Ret, Args...>()); //TODO FuncBuilder2 should be FuncBuilderX
 				for (int i = 0; i < args.size(); i++)
 					ctx->setArg(i, args[i]);
 				ctx->setRet(0, out);
+
 
 				return out;
 			}

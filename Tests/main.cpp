@@ -106,6 +106,17 @@ const lest::test specification[] =
 		EXPECT(TestValue("(1 || 0) && (1 || 1)", 1.0f));
 		EXPECT(TestValue("(1 && 0) || (1 && 1)", 1.0f));
 	},
+
+	CASE("Functions")
+	{
+		EXPECT(TestValue("math.min(-1,1) + 3", 2.0f));
+		EXPECT(TestValue("math.max(-1,1) + 3", 4.0f));
+
+		EXPECT(TestValue("if(1,2,3) + 2", 4.0f));
+		EXPECT(TestValue("if(0,2,3) + 2", 5.0f));
+
+		EXPECT(TestValue("math.min(math.max(-1,1),6) + 3", 4.0f));
+	},
 };
 
 int main (int argc, char * argv[])
