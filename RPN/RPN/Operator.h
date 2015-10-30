@@ -165,7 +165,7 @@ namespace RPN
 			asmjit::X86XmmVar out(c);
 			setXmmVariable(c, out, 1.0f);
 			c.cmpss(o1, o2, (int)_imm);
-			c.andps(o1, o1);
+			c.andps(out, o1);
 			return out;
 		}
 
