@@ -1,5 +1,10 @@
 #include <iostream>
 #include "RPN/Parser.h"
+
+#ifndef _MSC_VER
+#define lest_FEATURE_COLOURISE 1
+#endif
+
 #include "lest.hpp"
 
 using namespace std;
