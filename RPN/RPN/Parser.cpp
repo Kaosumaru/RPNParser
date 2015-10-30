@@ -266,9 +266,9 @@ void ParserContext::AddToken(Token* token)
 
 void _InitializeParser()
 {
-	Functions::AddLambda("if", [](float c, float a, float b) { return c != 0.0f ? a : b; });
-	Functions::AddLambda("math.max", [](float a, float b) { return a > b ? a : b; });
-	Functions::AddLambda("math.min", [](float a, float b) { return a > b ? b : a; });
+	Functions::AddStatelessLambda("if", [](float c, float a, float b) { return c != 0.0f ? a : b; });
+	Functions::AddStatelessLambda("math.max", [](float a, float b) { return a > b ? a : b; });
+	Functions::AddStatelessLambda("math.min", [](float a, float b) { return a > b ? b : a; });
 }
 
 Parser::Parser()
@@ -293,6 +293,9 @@ Parser::FunctionPtr Parser::Compile(const std::string& text)
 {
 	using namespace asmjit;
 	auto token = Parse(text);
+
+	if (!token)
+		return nullptr;
 
 	if (!token->compilable())
 		return nullptr;
