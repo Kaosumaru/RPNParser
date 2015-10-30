@@ -106,6 +106,11 @@ namespace RPN
 				return token->value();
 			}
 
+			static bool compilable()
+			{
+				return false;
+			}
+
 		};
 
 		template<>
@@ -117,6 +122,10 @@ namespace RPN
 				return token->stringValue();
 			}
 
+			static bool compilable()
+			{
+				return false;
+			}
 		};
 
 	}
