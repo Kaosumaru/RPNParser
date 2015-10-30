@@ -39,6 +39,12 @@ const lest::test specification[] =
 		EXPECT(TestParse("2+2*+3", false));
 		EXPECT(TestParse("2 22", false));
 	},
+	CASE("Parenthesis Parse")
+	{
+		EXPECT(TestParse("(1+1)", true));
+		EXPECT(TestParse("(2+2) * (2+3)", true));
+	},
+
 	CASE("Simplest Value")
 	{
 		EXPECT(TestValue("2+2", 4.0f));
@@ -78,6 +84,22 @@ const lest::test specification[] =
 
 		EXPECT(TestValue("2!=2", 0.0f));
 		EXPECT(TestValue("3!=2", 1.0f));
+	},
+
+	CASE("Boolean operators")
+	{
+		EXPECT(TestValue("2 && 2", 1.0f));
+		EXPECT(TestValue("0 && 2", 0.0f));
+		EXPECT(TestValue("0 && 0", 0.0f));
+		EXPECT(TestValue("(1 && 1) && (1 && 1)", 1.0f));
+
+		EXPECT(TestValue("2 || 2", 1.0f));
+		EXPECT(TestValue("0 || 2", 1.0f));
+		EXPECT(TestValue("0 || 0", 0.0f));
+		EXPECT(TestValue("(1 || 0) || (1 || 1)", 1.0f));
+
+		EXPECT(TestValue("(1 || 0) && (1 || 1)", 1.0f));
+		EXPECT(TestValue("(1 && 0) || (1 && 1)", 1.0f));
 	},
 };
 

@@ -15,6 +15,7 @@ namespace RPN
 		if (str == buffer.get())
 			return true;
 
+		ss.clear();
 		ss.seekg(position);
 
 		return false;

@@ -28,6 +28,7 @@ namespace RPN
 
 			while (true)
 			{
+				context.input.peek();
 				if (context.error || context.input.eof())
 					break;
 

@@ -233,7 +233,18 @@ namespace RPN
 	public:
 		float value() override { return (value_of(0) && value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 13; }
-		bool compilable() override { return false; }
+		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
+		{
+			c.andps(o1, o2);
+
+			asmjit::X86XmmVar zero(c);
+			setXmmVariable(c, zero, 0.0f);
+			c.cmpss(o1, zero, 4); //o1 != zero
+
+			setXmmVariable(c, zero, 1.0f); //well, abuse zero
+			c.andps(o1, zero);
+			return o1;
+		}
 	};
 
 	class BinaryOrOperator : public BinaryOperator
@@ -241,7 +252,18 @@ namespace RPN
 	public:
 		float value() override { return (value_of(0) || value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 14; }
-		bool compilable() override { return false; }
+		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
+		{
+			c.orps(o1, o2);
+
+			asmjit::X86XmmVar zero(c);
+			setXmmVariable(c, zero, 0.0f);
+			c.cmpss(o1, zero, 4); //o1 != zero
+
+			setXmmVariable(c, zero, 1.0f); //well, abuse zero
+			c.andps(o1, zero);
+			return o1;
+		}
 	};
 
 
