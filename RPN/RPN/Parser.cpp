@@ -99,6 +99,7 @@ namespace RPN
 		static std::map<std::string, std::function<Token*(Parser::Context &context)>> strToToken =
 		{
 			{ "==", [](Parser::Context &context) { return new BinaryEqualsOperator; } },
+			{ "!=", [](Parser::Context &context) { return new BinaryNotEqualsOperator; } },
 			{ ">=", [](Parser::Context &context) { return new BinaryGreaterOrEqualsOperator; } },
 			{ "<=", [](Parser::Context &context) { return new BinaryLesserOrEqualsOperator; } },
 
@@ -282,8 +283,8 @@ Parser::Parser()
 	_rules.push_back(rule_space_eater);
 	_rules.push_back(rule_value);
 	_rules.push_back(rule_string);
-	_rules.push_back(rule_short_operator);
 	_rules.push_back(rule_long_operator);
+	_rules.push_back(rule_short_operator);
 	_rules.push_back(embedded_function);
 
 }

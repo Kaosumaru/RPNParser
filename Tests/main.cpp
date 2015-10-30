@@ -22,7 +22,11 @@ bool TestValue(const std::string &expr, float expected)
 
 	auto pv = p->value();
 	auto cv = c();
-	return pv == expected && cv == expected;
+	bool res = pv == expected && cv == expected;
+
+	if (res)
+		return true;
+	return false;
 }
 
 
@@ -46,7 +50,34 @@ const lest::test specification[] =
 		EXPECT(TestValue("2-2", 0.0f));
 		EXPECT(TestValue("2*3", 6.0f));
 		EXPECT(TestValue("6/3", 2.0f));
+	},
 
+	CASE("Comparision operators")
+	{
+		EXPECT(TestValue("2<3", 1.0f));
+		EXPECT(TestValue("3<2", 0.0f));
+		EXPECT(TestValue("2<2", 0.0f));
+
+		EXPECT(TestValue("2<=3", 1.0f));
+		EXPECT(TestValue("3<=2", 0.0f));
+		EXPECT(TestValue("2<=2", 1.0f));
+
+		EXPECT(TestValue("3>2", 1.0f));
+		EXPECT(TestValue("2>3", 0.0f));
+		EXPECT(TestValue("2>2", 0.0f));
+
+		EXPECT(TestValue("3>=2", 1.0f));
+		EXPECT(TestValue("2>=3", 0.0f));
+		EXPECT(TestValue("2>=2", 1.0f));
+	},
+
+	CASE("Equality operators")
+	{
+		EXPECT(TestValue("2==2", 1.0f));
+		EXPECT(TestValue("3==2", 0.0f));
+
+		EXPECT(TestValue("2!=2", 0.0f));
+		EXPECT(TestValue("3!=2", 1.0f));
 	},
 };
 

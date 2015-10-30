@@ -145,45 +145,86 @@ namespace RPN
 	};
 
 
-	class BinaryLesserThanOperator : public BinaryOperator
+	class ComparisionOperator : public BinaryOperator
+	{
+	protected:
+		enum class Operator
+		{
+			Equal = 0,
+			LessThan,
+			LessOrEqual,
+			Unordered,
+			NotEqual,
+			NotLessThan,
+			NotLessOrEqual,
+			Ordered,
+		};
+
+		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
+		{
+			asmjit::X86XmmVar out(c);
+			setXmmVariable(c, out, 1.0f);
+			c.cmpss(o1, o2, (int)_imm);
+			c.andps(o1, o1);
+			return out;
+		}
+
+		Operator _imm = Operator::Equal;
+	};
+
+	class BinaryLesserThanOperator : public ComparisionOperator
 	{
 	public:
+		BinaryLesserThanOperator() { _imm = Operator::LessThan; }
+
 		float value() override { return (value_of(0) < value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 8; }
-		bool compilable() override { return false; }
 	};
 
-	class BinaryGreaterThanOperator : public BinaryOperator
+	class BinaryGreaterThanOperator : public ComparisionOperator
 	{
 	public:
+		BinaryGreaterThanOperator() { _imm = Operator::NotLessOrEqual; }
+
 		float value() override { return (value_of(0) > value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 8; }
-		bool compilable() override { return false; }
 	};
 
 
-	class BinaryLesserOrEqualsOperator : public BinaryOperator
+	class BinaryLesserOrEqualsOperator : public ComparisionOperator
 	{
 	public:
+		BinaryLesserOrEqualsOperator() { _imm = Operator::LessOrEqual; }
+
 		float value() override { return (value_of(0) <= value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 8; }
-		bool compilable() override { return false; }
 	};
 
-	class BinaryGreaterOrEqualsOperator : public BinaryOperator
+	class BinaryGreaterOrEqualsOperator : public ComparisionOperator
 	{
 	public:
+		BinaryGreaterOrEqualsOperator() { _imm = Operator::NotLessThan; }
+
 		float value() override { return (value_of(0) >= value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 8; }
-		bool compilable() override { return false; }
 	};
 
-	class BinaryEqualsOperator : public BinaryOperator
+	class BinaryEqualsOperator : public ComparisionOperator
 	{
 	public:
+		BinaryEqualsOperator() { _imm = Operator::Equal; }
+
 		float value() override { return (value_of(0) == value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 9; }
-		bool compilable() override { return false; }
+	};
+
+	class BinaryNotEqualsOperator : public ComparisionOperator
+	{
+	public:
+		BinaryNotEqualsOperator() { _imm = Operator::NotEqual; }
+
+		float value() override { return (value_of(0) != value_of(1)) ? 1.0f : 0.0f; }
+		int precedence() override { return 9; }
 	};
 
 
