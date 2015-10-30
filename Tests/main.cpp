@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stdexcept>
+
 #include "RPN/Parser.h"
 
 #ifndef _MSC_VER
@@ -20,15 +22,15 @@ float TestValue(const std::string &expr)
 	
 	auto p = RPN::Parser::Default().Parse(expr);
 	if (!p)
-		throw std::exception("Can't parse");
+		throw std::runtime_error("Can't parse");
     auto c = RPN::Parser::Default().Compile(expr);
 	if (!c)
-		throw std::exception("Can't compile");
+		throw std::runtime_error("Can't compile");
 
 	auto pv = p->value();
 	auto cv = c();
 	if (pv != cv)
-		throw std::exception("Compiled & interpreted result doesn't match");
+		throw std::runtime_error("Compiled & interpreted result doesn't match");
 
 	return cv;
 }
