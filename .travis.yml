@@ -33,4 +33,4 @@ script:
   - cd build
   - make
   - cd ..
-  - ./build/Tests -p -t
+  - ./build/Tests
