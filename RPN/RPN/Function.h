@@ -90,7 +90,7 @@ namespace RPN
 	namespace impl
 	{
 		template<typename Type>
-		class RPNToType : public Function
+		class RPNToType
 		{
 		public:
 
@@ -98,7 +98,7 @@ namespace RPN
 		};
 
 		template<>
-		class RPNToType<float> : public Function
+		class RPNToType<float>
 		{
 		public:
 			static float from(const TokenPtr& token)
@@ -114,7 +114,7 @@ namespace RPN
 		};
 
 		template<>
-		class RPNToType<std::string> : public Function
+		class RPNToType<std::string>
 		{
 		public:
 			static std::string from(const TokenPtr& token)
