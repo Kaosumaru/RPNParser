@@ -7,41 +7,45 @@
 using namespace std;
 benchpress::registration* benchpress::registration::d_this;
 
-std::string short_expression = "2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2";
 
-BENCHMARK("Interpreted value", [](benchpress::context* ctx) {
-	auto p = RPN::Parser::Default().Parse(short_expression);
+void Interpret(benchpress::context* ctx, const std::string& expr)
+{
+	auto p = RPN::Parser::Default().Parse(expr);
 	ctx->reset_timer();
 	for (size_t i = 0; i < ctx->num_iterations(); ++i) {
 		p->value();
 	}
-})
+}
 
-BENCHMARK("Compiled value", [](benchpress::context* ctx) {
-	auto c = RPN::Parser::Default().Compile(short_expression);
+void Compile(benchpress::context* ctx, const std::string& expr)
+{
+	auto c = RPN::Parser::Default().Compile(expr);
 	ctx->reset_timer();
 	for (size_t i = 0; i < ctx->num_iterations(); ++i) {
 		c();
 	}
-})
+}
+
+#define BENCHMARK_RPN(x, f) benchpress::auto_register CONCAT2(register_, __LINE__)((CONCAT2("Interpret ", x)), ([](benchpress::context* ctx) {Interpret(ctx, f);})); \
+benchpress::auto_register CONCAT2(register2_, __LINE__)((CONCAT2("Compile ", x)), ([](benchpress::context* ctx) {Compile(ctx, f);}));
+
+
+
+
+
+
+
+std::string short_expression = "2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2";
+
+BENCHMARK_RPN("short_expression", short_expression)
 
 std::string short_expression2 = "1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1==1";
 
-BENCHMARK("Interpreted value", [](benchpress::context* ctx) {
-	auto p = RPN::Parser::Default().Parse(short_expression2);
-	ctx->reset_timer();
-	for (size_t i = 0; i < ctx->num_iterations(); ++i) {
-		p->value();
-	}
-})
+BENCHMARK_RPN("short_expression2", short_expression2)
 
-BENCHMARK("Compiled value", [](benchpress::context* ctx) {
-	auto c = RPN::Parser::Default().Compile(short_expression2);
-	ctx->reset_timer();
-	for (size_t i = 0; i < ctx->num_iterations(); ++i) {
-		c();
-	}
-})
+std::string math_function = "math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,1))))))))))))+math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,math.min(1,1))))))))))))";
+
+BENCHMARK_RPN("math function", math_function)
 
 
 float add(float a, float b)

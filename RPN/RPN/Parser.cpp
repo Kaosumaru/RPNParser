@@ -153,13 +153,13 @@ std::unique_ptr<Token> ParserContext::popAndParseToken()
 	output.pop_back();
 	op->Parse(*this);
 
-/*
-#ifndef _DEBUG
+
+#ifndef RPN_OPTIMIZE_0
 	//optimize, cull tree
 	if (op->type() != Token::Type::Variable && op->constant())
 		op.reset(new Value(op->value()));
 #endif
-	*/
+	
 	return op;
 }
 
