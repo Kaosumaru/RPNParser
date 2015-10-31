@@ -5,14 +5,14 @@ macro (add_sources)
     file (RELATIVE_PATH _relPath "${PROJECT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}")
     foreach (_src ${ARGN})
         if (_relPath)
-            list (APPEND SRCS "${_relPath}/${_src}")
+            list (APPEND RPN_SRCS "${_relPath}/${_src}")
         else()
-            list (APPEND SRCS "${_src}")
+            list (APPEND RPN_SRCS "${_src}")
         endif()
     endforeach()
     if (_relPath)
-        # propagate SRCS to parent directory
-        set (SRCS ${SRCS} PARENT_SCOPE)
+        # propagate RPN_SRCS to parent directory
+        set (RPN_SRCS ${RPN_SRCS} PARENT_SCOPE)
     endif()
 endmacro()
 
@@ -40,7 +40,7 @@ include("${ASMJIT_DIR}/CMakeLists.txt")
 set(RPN_Includes ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR} ${ASMJIT_DIR}/src/ PARENT_SCOPE)
 set(RPN_Deps ${ASMJIT_DEPS} PARENT_SCOPE)
 
-add_library(RPN ${SRCS} ${ASMJIT_SRC})
+add_library(RPN ${RPN_SRCS} ${ASMJIT_SRC})
 
 ##dependencies
 
