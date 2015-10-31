@@ -63,8 +63,12 @@ namespace RPN
 
 			auto ret = context.popAndParseToken();
 			if (!ret || context.error || !context.output.empty())
-                return nullptr;
-
+			{
+#ifdef _DEBUG
+				assert(false);
+#endif
+				return nullptr;
+			}
 			return ret;
 		}
 
