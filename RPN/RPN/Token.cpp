@@ -28,7 +28,7 @@ asmjit::X86XmmVar Token::Compile(asmjit::X86Compiler& c)
 	X86GpVar arg(c, kVarTypeIntPtr, "PointerToToken");
 	c.mov(arg, imm_ptr(this));
 
-	auto ctx = c.call((uint64_t)&impl::value_of_token, kFuncConvHost, FuncBuilder1<float, Token*>()); //TODO FuncBuilder2 should be FuncBuilderX
+	auto ctx = c.call((uint64_t)&impl::value_of_token, kFuncConvHost, FuncBuilder1<float, Token*>());
 	ctx->setArg(0, arg);
 	ctx->setRet(0, out);
 
