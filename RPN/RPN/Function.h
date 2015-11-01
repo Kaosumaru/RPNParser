@@ -111,12 +111,6 @@ namespace RPN
 			{
 				return token->value();
 			}
-
-			static bool compilable()
-			{
-				return false;
-			}
-
 		};
 
 		template<>
@@ -126,11 +120,6 @@ namespace RPN
 			static std::string from(const TokenPtr& token)
 			{
 				return token->stringValue();
-			}
-
-			static bool compilable()
-			{
-				return false;
 			}
 		};
 
@@ -284,13 +273,6 @@ namespace RPN
 			return out;
 		}
 
-		bool compilable() override
-		{
-			for (auto& token : _tokens)
-				if (!token->compilable())
-					return false;
-			return true;
-		}
 	protected:
 		FuncPointer _func;
 		std::vector<TokenPtr> _tokens;

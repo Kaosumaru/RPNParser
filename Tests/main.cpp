@@ -32,6 +32,7 @@ float TestValue(const std::string &expr)
 	if (pv != cv)
 		throw std::runtime_error("Compiled & interpreted result doesn't match");
 
+	c.Release();
 	return cv;
 }
 
@@ -117,6 +118,21 @@ const lest::test specification[] =
 		EXPECT(TestValue("if(0,2,3) + 2") == 5.0f);
 
 		EXPECT(TestValue("math.min(math.max(-1,1),6) + 3") == 4.0f);
+	},
+
+	CASE("Functors/Functions with string args")
+	{
+		EXPECT(TestValue("string.length('Test')") == 4.0f);
+
+		EXPECT(TestValue("stack.push(3)") == 3.0f);
+		EXPECT(TestValue("stack.pop()") == 3.0f);
+
+		EXPECT(TestValue("string.length('Test') + string.length('Test2')") == 9.0f);
+
+
+		EXPECT(TestValue("stack.push(1) + stack.push(2)") == 3.0f);
+		EXPECT(TestValue("stack.pop() + stack.pop()") == 3.0f);
+
 	},
 };
 

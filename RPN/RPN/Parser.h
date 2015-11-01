@@ -11,13 +11,34 @@
 
 namespace RPN
 {
-
 	class Parser
 	{
 	public:
 		using Context = ParserContext;
 		using ParsingRule = std::function<bool(Context &context)>;
 		using FunctionPtr = float(*)();
+
+		class CompiledFunction
+		{
+		public:
+			CompiledFunction() {}
+			CompiledFunction(const FunctionPtr &f, TokenPtr&& t) : _function(f), _token(std::move(t)) {}
+
+			operator bool() const
+			{
+				return _function != nullptr;
+			}
+
+			float operator()()
+			{
+				return _function();
+			}
+
+			void Release();
+		protected:
+			FunctionPtr _function = nullptr;
+			TokenPtr    _token;
+		};
 
 		Parser();
 
@@ -72,7 +93,7 @@ namespace RPN
 			return ret;
 		}
 
-		FunctionPtr Compile(const std::string& text);
+		CompiledFunction Compile(const std::string& text);
 
 
 		static Parser& Default()
@@ -80,6 +101,7 @@ namespace RPN
 			static Parser p;
 			return p;
 		}
+
 
 	protected:
 		std::vector<ParsingRule> _rules;

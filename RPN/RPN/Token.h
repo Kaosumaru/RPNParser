@@ -43,15 +43,7 @@ namespace RPN
 
 		virtual void Parse(ParserContext &) {}
 
-		virtual bool compilable() { return false; }
-		virtual asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) 
-		{
-			using namespace asmjit;
-			assert(false);
-			X86XmmVar out(c, kX86VarTypeXmm, "Value");
-			setXmmVariable(c, out, value());
-			return out;
-		}
+		virtual asmjit::X86XmmVar Compile(asmjit::X86Compiler& c);
 	};
 
 	typedef std::unique_ptr<Token> TokenPtr;
@@ -90,7 +82,6 @@ namespace RPN
 			return out;
 		}
 
-		bool compilable() override { return true; }
 	protected:
 		float _value;
 	};

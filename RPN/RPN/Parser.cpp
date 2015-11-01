@@ -12,7 +12,15 @@ std::map<std::string, std::function<Token*(Parser::Context &context)>> Functions
 
 namespace RPN
 {
-
+	namespace impl
+	{
+		asmjit::JitRuntime& jitRuntime()
+		{
+			static asmjit::JitRuntime runtime;
+			return runtime;
+		}
+		
+	};
 
 
 	bool rule_space_eater(Parser::Context &context)
@@ -142,126 +150,12 @@ namespace RPN
 
 }
 
-std::unique_ptr<Token> ParserContext::popAndParseToken()
+
+void Parser::CompiledFunction::Release()
 {
-	if (output.empty())
-    {
-        error = true;
-		return nullptr;
-    }
-	auto op = std::move(output.back());
-	output.pop_back();
-	op->Parse(*this);
-
-
-#ifndef RPN_OPTIMIZE_0
-	//optimize, cull tree
-	if (op->type() != Token::Type::Variable && op->constant())
-		op.reset(new Value(op->value()));
-#endif
-	
-	return op;
+	auto& runtime = impl::jitRuntime();
+	runtime.release((void*)_function);
 }
-
-void ParserContext::AddToken(Token* token)
-{
-    last_operator_type = token->type();
-	if (token->type() == Token::Type::Variable)
-	{
-		//If the token is a number, then add it to the output queue
-		output.emplace_back(token);
-		return;
-	}
-
-	if (token->type() == Token::Type::Function)
-	{
-		//If the token is a function token, then push it onto the stack.
-		operator_stack.push(std::move(TokenPtr(token)));
-		return;
-	}
-
-	if (token->type() == Token::Type::FunctionArgumentSeparator)
-	{
-		//Until the token at the top of the stack is a left parenthesis, pop operators off the stack onto the output queue.
-		//If no left parentheses are encountered, either the separator was misplaced or parentheses were mismatched.
-
-		while (!operator_stack.empty() && operator_stack.top()->type() != Token::Type::LeftParenthesis)
-		{
-			output.emplace_back(std::move(operator_stack.top()));
-			operator_stack.pop();
-		}
-
-		return;
-	}
-
-	if (token->type() == Token::Type::Operator)
-	{
-		//while there is an operator token, o2, at the top of the stack, and
-		while (!operator_stack.empty())
-		{
-			auto &o1 = token;
-			auto &o2 = operator_stack.top();
-
-			//either o1 is left-associative and its precedence is equal to that of o2,
-			//or o1 has precedence less than that of o2,
-			if ((o1->left_associative() && o1->precedence() == o2->precedence()) || (o1->precedence() < o2->precedence()))
-			{
-				//pop o2 off the stack, onto the output queue;
-				output.emplace_back(std::move(operator_stack.top()));
-				operator_stack.pop();
-				continue;
-			}
-			break;
-		}
-
-		//push o1 onto the stack.
-		operator_stack.push(std::move(TokenPtr(token)));
-		return;
-	}
-
-	if (token->type() == Token::Type::LeftParenthesis)
-	{
-		//If the token is a left parenthesis, then push it onto the stack.
-		operator_stack.push(std::move(TokenPtr(token)));
-		return;
-	}
-
-	if (token->type() == Token::Type::RightParenthesis)
-	{
-		//Until the token at the top of the stack is a left parenthesis, pop operators off the stack onto the output queue.
-		while (!operator_stack.empty())
-		{
-			auto &o = operator_stack.top();
-
-			if (o->type() != Token::Type::LeftParenthesis)
-			{
-				output.emplace_back(std::move(operator_stack.top()));
-				operator_stack.pop();
-				continue;
-			}
-			break;
-		}
-
-		if (operator_stack.empty())
-		{
-			//ERROR
-		}
-
-		//Pop the left parenthesis from the stack, but not onto the output queue.
-		operator_stack.pop();
-
-		//If the token at the top of the stack is a function token, pop it onto the output queue.
-		if (!operator_stack.empty() && operator_stack.top()->type() == Token::Type::Function)
-		{
-			output.emplace_back(std::move(operator_stack.top()));
-			operator_stack.pop();
-		}
-
-		return;
-	}
-
-}
-
 
 
 void _InitializeParser()
@@ -269,6 +163,34 @@ void _InitializeParser()
 	Functions::AddStatelessLambda("if", [](float c, float a, float b) { return c != 0.0f ? a : b; });
 	Functions::AddStatelessLambda("math.max", [](float a, float b) { return a > b ? a : b; });
 	Functions::AddStatelessLambda("math.min", [](float a, float b) { return a > b ? b : a; });
+
+	Functions::AddLambda("string.length", [](const std::string &str) { return (float)str.size(); });
+
+	{
+		static std::stack<float> stack;
+
+		auto push = [&](float arg) 
+		{ 
+			stack.push(arg); return arg; 
+		};
+		auto pop = [&]()
+		{ 
+			if (stack.empty())
+			{
+				assert(false);
+				return 0.0f;
+			}
+			auto a = stack.top();  
+			stack.pop(); 
+			return a;
+		};
+
+
+		Functions::AddLambda("stack.push", push);
+		Functions::AddLambda("stack.pop", pop);
+	}
+
+
 }
 
 Parser::Parser()
@@ -289,18 +211,16 @@ Parser::Parser()
 
 }
 
-Parser::FunctionPtr Parser::Compile(const std::string& text)
+Parser::CompiledFunction Parser::Compile(const std::string& text)
 {
 	using namespace asmjit;
 	auto token = Parse(text);
 
 	if (!token)
-		return nullptr;
+		return {};
 
-	if (!token->compilable())
-		return nullptr;
 
-	static JitRuntime runtime; //this could be better
+	auto& runtime = impl::jitRuntime();
 	StringLogger logger;
 	X86Compiler c(&runtime);
 	c.setLogger(&logger);
@@ -310,6 +230,7 @@ Parser::FunctionPtr Parser::Compile(const std::string& text)
 	c.ret(token->Compile(c));
 	c.endFunc();
 
+	auto pointer = asmjit_cast<FunctionPtr>(c.make());
 
-	return asmjit_cast<FunctionPtr>(c.make());
+	return{ pointer , std::move(token) };
 }

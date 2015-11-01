@@ -20,7 +20,6 @@ namespace RPN
         bool left_associative() override { return false; }
 		int precedence() override { return 10; }
 		bool constant() override { return _token ? _token->constant() : true; }
-		bool compilable() override { return _token ? _token->compilable() : false; }
 	protected:
 		void Parse(ParserContext &tokens) override
 		{
@@ -59,13 +58,6 @@ namespace RPN
 
 		bool constant() override { return (_tokens[0] && !_tokens[0]->constant()) || (_tokens[1] && !_tokens[1]->constant()) ? false : true; }
 
-		bool compilable() override 
-		{
-			for (int i = 0; i < 2; i++)
-			if (!_tokens[i] || !_tokens[i]->compilable())
-				return false;
-			return true; 
-		}
 	protected:
 		void Parse(ParserContext &tokens) override
 		{
