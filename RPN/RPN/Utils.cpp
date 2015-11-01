@@ -40,7 +40,6 @@ namespace RPN
 			ss.get();
 			index++;
 		}
-		auto position_end = ss.tellg();
 
 		auto length = index;
 
