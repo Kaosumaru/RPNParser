@@ -32,7 +32,9 @@ benchpress::auto_register CONCAT2(register2_, __LINE__)((CONCAT2("Compile ", x))
 
 
 
+std::string single_expression = "1";
 
+BENCHMARK_RPN("single_expression", single_expression)
 
 
 std::string short_expression = "2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2*2";
@@ -47,12 +49,9 @@ std::string math_function = "math.min(1,math.min(1,math.min(1,math.min(1,math.mi
 
 BENCHMARK_RPN("math function", math_function)
 
+std::string string_function = "string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')+string.length('test')";
 
-float add(float a, float b)
-{
-	return a + b;
-}
-
+BENCHMARK_RPN("string function", string_function)
 
 
 int main (int argc, char * argv[])
