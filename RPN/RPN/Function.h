@@ -224,7 +224,7 @@ namespace RPN
 
 		float value() override
 		{
-			return calculateValue(typename impl::gens<typename Parent::arity>::type());;
+			return calculateValue(typename impl::gens<Parent::arity>::type());;
 		}
 	};
 
@@ -241,7 +241,7 @@ namespace RPN
 
 		std::string stringValue() override
 		{
-			return calculateValue(typename impl::gens<typename Parent::arity>::type());;
+			return calculateValue(typename impl::gens<Parent::arity>::type());;
 		}
 	};
 
