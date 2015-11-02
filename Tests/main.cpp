@@ -36,6 +36,14 @@ float TestValue(const std::string &expr)
 	return cv;
 }
 
+std::string TestValueString(const std::string &expr)
+{
+	auto p = RPN::Parser::Default().Parse(expr);
+	if (!p)
+		throw std::runtime_error("Can't parse");
+	return p->stringValue();
+}
+
 
 const lest::test specification[] =
 {
@@ -132,7 +140,13 @@ const lest::test specification[] =
 
 		EXPECT(TestValue("stack.push(1) + stack.push(2)") == 3.0f);
 		EXPECT(TestValue("stack.pop() + stack.pop()") == 3.0f);
+	},
 
+	CASE("String Functors")
+	{
+		EXPECT(TestValueString("string.join('aaa','bbb')") == "aaabbb");
+		EXPECT(TestValueString("string.join('aaa',2)") == "aaa2");
+		EXPECT(TestValueString("string.join(12,34)") == "1234");
 	},
 };
 

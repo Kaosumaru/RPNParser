@@ -164,7 +164,11 @@ void _InitializeParser()
 	Functions::AddStatelessLambda("math.max", [](float a, float b) { return a > b ? a : b; });
 	Functions::AddStatelessLambda("math.min", [](float a, float b) { return a > b ? b : a; });
 
-	Functions::AddLambda("string.length", [](const std::string &str) { return (float)str.size(); });
+	{
+		Functions::AddLambda("string.length", [](const std::string &str) { return (float)str.size(); });
+		Functions::AddLambda("string.join", [](const std::string &str1, const std::string &str2) { return str1+str2; });
+	}
+	
 
 	{
 		static std::stack<float> stack;

@@ -39,6 +39,11 @@ namespace RPN
 				return _token->constant();
 			}
 
+			const TokenPtr& token() const
+			{
+				return _token;
+			}
+
 			void Release();
 		protected:
 			FunctionPtr _function = nullptr;

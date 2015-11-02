@@ -35,7 +35,7 @@ namespace RPN
 
 		virtual bool constant() { return true; } //returns true if this Token always returns same value
 		virtual float value() { return 0.0f; }
-		virtual std::string stringValue() { return ""; }
+		virtual std::string stringValue() { return std::to_string((int)value()); } //TODO fix rounding
 
 		virtual int precedence() { return 0; }
 		virtual bool left_associative() { return true; }

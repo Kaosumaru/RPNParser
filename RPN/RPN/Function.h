@@ -170,23 +170,14 @@ namespace RPN
 
 	}
 
-	template<typename Func>
-	class GenericFunction : public Function
-	{
-	public:
-
-
-	};
-
-
 	template<typename R, typename... Args>
-	class GenericFunction<std::function<R(Args...)>> : public Function
+	class GenericFunction_Base : public Function
 	{
 	public:
 		static const unsigned short int arity = sizeof...(Args);
 		using Functor = std::function < R(Args...) >;
 
-		GenericFunction(const Functor& functor) : _functor(functor)
+		GenericFunction_Base(const Functor& functor) : _functor(functor)
 		{
 
 		}
@@ -194,15 +185,10 @@ namespace RPN
 		void Parse(ParserContext &tokens) override
 		{
 			_tokens.resize(arity);
-			for (auto it = _tokens.rbegin(); it != _tokens.rend(); it ++)
+			for (auto it = _tokens.rbegin(); it != _tokens.rend(); it++)
 			{
 				*it = tokens.popAndParseToken();
 			}
-		}
-
-		float value() override
-		{
-			return calculateValue(typename impl::gens<arity>::type());;
 		}
 
 		template<int ...S>
@@ -215,6 +201,48 @@ namespace RPN
 		Functor _functor;
 		std::vector<TokenPtr> _tokens;
 	};
+
+
+	template<typename Func>
+	class GenericFunction : public Function
+	{
+	public:
+
+
+	};
+
+
+	template<typename... Args>
+	class GenericFunction<std::function<float(Args...)>> : public GenericFunction_Base<float, Args...>
+	{
+	public:
+		GenericFunction(const Functor& functor) : GenericFunction_Base<float, Args...>(functor)
+		{
+
+		}
+
+		float value() override
+		{
+			return calculateValue(typename impl::gens<arity>::type());;
+		}
+	};
+
+
+	template<typename... Args>
+	class GenericFunction<std::function<std::string(Args...)>> : public GenericFunction_Base<std::string, Args...>
+	{
+	public:
+		GenericFunction(const Functor& functor) : GenericFunction_Base<std::string, Args...>(functor)
+		{
+
+		}
+
+		std::string stringValue() override
+		{
+			return calculateValue(typename impl::gens<arity>::type());;
+		}
+	};
+
 
 	template<typename Type>
 	class SimpleFunction
