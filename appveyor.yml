@@ -9,6 +9,6 @@ build_script:
 - cd build
 - cmake --version
 - cmake ../Tests -G "Visual Studio 14 2015"
-- cmake --build ../Tests --config Release
+- cmake --build . --config Release
 test_script:
 - Release\Tests.exe
