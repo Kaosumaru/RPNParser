@@ -216,14 +216,15 @@ namespace RPN
 	class GenericFunction<std::function<float(Args...)>> : public GenericFunction_Base<float, Args...>
 	{
 	public:
-		GenericFunction(const Functor& functor) : GenericFunction_Base<float, Args...>(functor)
+		using Parent = GenericFunction_Base<float, Args...>;
+		GenericFunction(const Parent::Functor& functor) : GenericFunction_Base<float, Args...>(functor)
 		{
 
 		}
 
 		float value() override
 		{
-			return calculateValue(typename impl::gens<arity>::type());;
+			return calculateValue(typename impl::gens<Parent::arity>::type());;
 		}
 	};
 
@@ -232,14 +233,15 @@ namespace RPN
 	class GenericFunction<std::function<std::string(Args...)>> : public GenericFunction_Base<std::string, Args...>
 	{
 	public:
-		GenericFunction(const Functor& functor) : GenericFunction_Base<std::string, Args...>(functor)
+		using Parent = GenericFunction_Base<std::string, Args...>;
+		GenericFunction(const Parent::Functor& functor) : GenericFunction_Base<std::string, Args...>(functor)
 		{
 
 		}
 
 		std::string stringValue() override
 		{
-			return calculateValue(typename impl::gens<arity>::type());;
+			return calculateValue(typename impl::gens<Parent::arity>::type());;
 		}
 	};
 
