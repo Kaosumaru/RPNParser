@@ -167,6 +167,16 @@ void _InitializeParser()
 	{
 		Functions::AddLambda("string.length", [](const std::string &str) { return (float)str.size(); });
 		Functions::AddLambda("string.join", [](const std::string &str1, const std::string &str2) { return str1+str2; });
+
+#if 0 //won't work for now
+		Functions::AddLambda("string.join", [](const std::vector<TokenPtr>& tokens) 
+		{
+			std::ostringstream ss;
+			for (auto &token : tokens)
+				ss << token->stringValue();
+			return ss.str(); 
+		});
+#endif
 	}
 	
 

@@ -147,6 +147,11 @@ const lest::test specification[] =
 		EXPECT(TestValueString("string.join('aaa','bbb')") == "aaabbb");
 		EXPECT(TestValueString("string.join('aaa',2)") == "aaa2");
 		EXPECT(TestValueString("string.join(12,34)") == "1234");
+
+		EXPECT(TestValue("string.length(string.join(1,2))") == 2.0f);
+		EXPECT(TestValue("string.length(string.join(string.join('aaa','bbb'),1))") == 7.0f);
+		//EXPECT(TestValueString("string.join(1,2,3)") == "123"); join isn't variadic right now
+		//
 	},
 };
 

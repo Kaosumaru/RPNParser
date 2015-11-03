@@ -107,7 +107,7 @@ namespace RPN
 		class RPNToType<float>
 		{
 		public:
-			static float from(const TokenPtr& token)
+			static float from(const TokenPtr& token, const std::vector<TokenPtr>& tokens)
 			{
 				return token->value();
 			}
@@ -117,9 +117,19 @@ namespace RPN
 		class RPNToType<std::string>
 		{
 		public:
-			static std::string from(const TokenPtr& token)
+			static std::string from(const TokenPtr& token, const std::vector<TokenPtr>& tokens)
 			{
 				return token->stringValue();
+			}
+		};
+
+		template<>
+		class RPNToType<std::vector<TokenPtr>>
+		{
+		public:
+			static const std::vector<TokenPtr>& from(const TokenPtr& token, const std::vector<TokenPtr>& tokens)
+			{
+				return tokens;
 			}
 		};
 
@@ -194,7 +204,7 @@ namespace RPN
 		template<int ...S>
 		R calculateValue(impl::seq<S...>)
 		{
-			return _functor(impl::RPNToType<typename std::decay<Args>::type>::from(_tokens[S]) ...);
+			return _functor(impl::RPNToType<typename std::decay<Args>::type>::from(_tokens[S], _tokens) ...);
 		}
 
 	protected:
@@ -281,7 +291,7 @@ namespace RPN
 		template<int ...S>
 		R calculateValue(impl::seq<S...>)
 		{
-			return _func(impl::RPNToType<typename std::decay<Args>::type>::from(_tokens[S]) ...);
+			return _func(impl::RPNToType<typename std::decay<Args>::type>::from(_tokens[S], _tokens) ...);
 		}
 
 		static float add(float a, float b)

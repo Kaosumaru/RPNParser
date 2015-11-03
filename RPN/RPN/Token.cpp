@@ -77,12 +77,25 @@ void ParserContext::AddToken(Token* token)
 	if (token->type() == Token::Type::FunctionArgumentSeparator)
 	{
 		//Until the token at the top of the stack is a left parenthesis, pop operators off the stack onto the output queue.
-		//If no left parentheses are encountered, either the separator was misplaced or parentheses were mismatched.
-
-		while (!operator_stack.empty() && operator_stack.top()->type() != Token::Type::LeftParenthesis)
+		bool foundParenthesis = false;
+		while (true)
 		{
+			if (operator_stack.empty())
+				break;
+			if (operator_stack.top()->type() == Token::Type::LeftParenthesis)
+			{
+				foundParenthesis = true;
+				break;
+			}
+
 			output.emplace_back(std::move(operator_stack.top()));
 			operator_stack.pop();
+		}
+
+		//If no left parentheses are encountered, either the separator was misplaced or parentheses were mismatched.
+		if (!foundParenthesis)
+		{
+			error = true;
 		}
 
 		return;
@@ -138,7 +151,7 @@ void ParserContext::AddToken(Token* token)
 
 		if (operator_stack.empty())
 		{
-			//ERROR
+			error = true;
 		}
 
 		//Pop the left parenthesis from the stack, but not onto the output queue.
