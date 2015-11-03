@@ -48,6 +48,7 @@ namespace RPN
 
 	typedef std::unique_ptr<Token> TokenPtr;
 
+	class Function;
 
 	struct ParserContext
 	{
@@ -58,9 +59,18 @@ namespace RPN
 
 //TODO
 //	protected:
+		struct FunctionArity
+		{
+			FunctionArity() {}
+			FunctionArity(Function *f, int a) : func(f), arity(a) {}
+			Function *func = nullptr;
+			int arity = 0;
+		};
 
 		void AddToken(Token* token);
 		Token::Type last_operator_type = Token::Type::None;
+		std::stack<FunctionArity> functionArity_stack;
+
 		std::stack<TokenPtr> operator_stack;
 		std::vector<TokenPtr> output;
 		std::stringstream input;

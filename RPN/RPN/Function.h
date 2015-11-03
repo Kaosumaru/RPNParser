@@ -11,9 +11,14 @@ namespace RPN
 	class Function : public Token
 	{
 	public:
-
 		Type type() override { return Type::Function; }
 		bool constant() override { return false; }
+
+	protected:
+		friend struct ParserContext;
+
+		void SetCallArity(int arity) { _callArity = arity; }
+		int _callArity = 0;
 	};
 
 
@@ -194,7 +199,12 @@ namespace RPN
 
 		void Parse(ParserContext &tokens) override
 		{
-			_tokens.resize(arity);
+			if (_callArity < arity)
+			{
+				tokens.error = true;
+			}
+
+			_tokens.resize(_callArity);
 			for (auto it = _tokens.rbegin(); it != _tokens.rend(); it++)
 			{
 				*it = tokens.popAndParseToken();
@@ -276,7 +286,12 @@ namespace RPN
 
 		void Parse(ParserContext &tokens) override
 		{
-			_tokens.resize(arity);
+			if (_callArity < arity)
+			{
+				tokens.error = true;
+			}
+
+			_tokens.resize(_callArity);
 			for (auto it = _tokens.rbegin(); it != _tokens.rend(); it++)
 			{
 				*it = tokens.popAndParseToken();

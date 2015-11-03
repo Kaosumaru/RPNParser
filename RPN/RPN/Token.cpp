@@ -59,6 +59,7 @@ std::unique_ptr<Token> ParserContext::popAndParseToken()
 
 void ParserContext::AddToken(Token* token)
 {
+	auto previous_operator_type = last_operator_type;
 	last_operator_type = token->type();
 	if (token->type() == Token::Type::Variable)
 	{
@@ -71,6 +72,11 @@ void ParserContext::AddToken(Token* token)
 	{
 		//If the token is a function token, then push it onto the stack.
 		operator_stack.push(std::move(TokenPtr(token)));
+
+		//push this function on function stack, so we can calculate it's 'call arity'
+		//we initialize arity to 1, increment it after we find comma, and decrement if there is no arguments to function 
+		//( parenthesis come after self )
+		functionArity_stack.push(FunctionArity{ dynamic_cast<Function*>(token), 1 });
 		return;
 	}
 
@@ -97,6 +103,17 @@ void ParserContext::AddToken(Token* token)
 		{
 			error = true;
 		}
+
+		//increment arity of function that this belongs to
+		if (functionArity_stack.empty() || !functionArity_stack.top().func)
+		{
+			error = true;
+		}
+		else
+		{
+			functionArity_stack.top().arity++;
+		}
+
 
 		return;
 	}
@@ -130,6 +147,11 @@ void ParserContext::AddToken(Token* token)
 	{
 		//If the token is a left parenthesis, then push it onto the stack.
 		operator_stack.push(std::move(TokenPtr(token)));
+
+		//If this doesn't belongs to a function call, mark this as empty entry on function arity
+		if (previous_operator_type != Token::Type::Function)
+			functionArity_stack.push(FunctionArity{ nullptr, 0 });
+
 		return;
 	}
 
@@ -164,6 +186,23 @@ void ParserContext::AddToken(Token* token)
 			operator_stack.pop();
 		}
 
+		//we calculated arity, assign it to function
+		if (functionArity_stack.empty())
+		{
+			error = true;
+		}
+		else
+		{
+			auto top = functionArity_stack.top();
+			functionArity_stack.pop();
+			if (top.func)
+			{
+				auto arity = top.arity;
+				if (previous_operator_type == Token::Type::LeftParenthesis)
+					arity--;
+				top.func->SetCallArity(arity);
+			}
+		}
 		return;
 	}
 
