@@ -30,6 +30,13 @@ namespace RPN
 			FunctionArgumentSeparator
 		};
 
+		enum class VariableType
+		{
+			Undefined,
+			Float,
+			String
+		};
+
 		Token(){};
 		virtual ~Token(){};
 
@@ -40,6 +47,7 @@ namespace RPN
 		virtual int precedence() { return 0; }
 		virtual bool left_associative() { return true; }
 		virtual Type type() { return Type::Variable; }
+		virtual VariableType returnType() { return VariableType::Float; }
 
 		virtual void Parse(ParserContext &) {}
 
@@ -84,6 +92,8 @@ namespace RPN
 
 		float value() override { return _value; }
 
+		VariableType returnType() override { return VariableType::Float; }
+
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
@@ -101,6 +111,7 @@ namespace RPN
 	public:
 		StringValue(const std::string& value) : _value(value) {}
 
+		VariableType returnType() override { return VariableType::String; }
 		std::string stringValue() override { return _value; }
 	protected:
 		std::string _value;

@@ -112,6 +112,8 @@ namespace RPN
 		class RPNToType<float>
 		{
 		public:
+			static Token::VariableType returnType() { return Token::VariableType::Float; }
+
 			static float from(const TokenPtr& token, const std::vector<TokenPtr>& tokens)
 			{
 				return token->value();
@@ -122,6 +124,8 @@ namespace RPN
 		class RPNToType<std::string>
 		{
 		public:
+			static Token::VariableType returnType() { return Token::VariableType::String; }
+
 			static std::string from(const TokenPtr& token, const std::vector<TokenPtr>& tokens)
 			{
 				return token->stringValue();
@@ -195,6 +199,11 @@ namespace RPN
 		GenericFunction_Base(const Functor& functor) : _functor(functor)
 		{
 
+		}
+
+		Token::VariableType returnType() override
+		{
+			return impl::RPNToType<R>::returnType();
 		}
 
 		void Parse(ParserContext &tokens) override
@@ -296,6 +305,11 @@ namespace RPN
 			{
 				*it = tokens.popAndParseToken();
 			}
+		}
+
+		Token::VariableType returnType() override
+		{
+			return impl::RPNToType<R>::returnType();
 		}
 
 		float value() override
