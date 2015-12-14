@@ -178,7 +178,7 @@ namespace RPN
 				X86XmmVar out(c, kX86VarTypeXmmSs);
 
 				auto ctx = c.call((uint64_t)func, kFuncConvHost, FuncBuilderVariadic<Ret, Args...>());
-				for (int i = 0; i < args.size(); i++)
+				for (size_t i = 0; i < args.size(); i++)
 					ctx->setArg(i, args[i]);
 				ctx->setRet(0, out);
 
