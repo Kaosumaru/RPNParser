@@ -23,16 +23,16 @@ namespace RPN
 	};
 
 
-	bool rule_space_eater(Parser::Context &context)
+	bool rule_whitespace_eater(Parser::Context &context)
 	{
 		auto peek = context.input.peek();
-		if (peek != ' ')
+		if (!isspace(peek))
 			return false;
 
 		while (true)
 		{
 			auto peek = context.input.peek();
-			if (peek != ' ')
+			if (!isspace(peek))
 				return true;
 			context.input.get();
 		}
@@ -213,7 +213,7 @@ Parser::Parser()
 		_InitializeParser();
 	}
 
-	_rules.push_back(rule_space_eater);
+	_rules.push_back(rule_whitespace_eater);
 	_rules.push_back(rule_value);
 	_rules.push_back(rule_string);
 	_rules.push_back(rule_long_operator);
