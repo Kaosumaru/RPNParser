@@ -161,8 +161,30 @@ void Parser::CompiledFunction::Release()
 void _InitializeParser()
 {
 	Functions::AddStatelessLambda("if", [](float c, float a, float b) { return c != 0.0f ? a : b; });
-	Functions::AddStatelessLambda("math.max", [](float a, float b) { return a > b ? a : b; });
-	Functions::AddStatelessLambda("math.min", [](float a, float b) { return a > b ? b : a; });
+
+	{
+		Functions::AddStatelessLambda("math.max", [](float a, float b) { return a > b ? a : b; });
+		Functions::AddStatelessLambda("math.min", [](float a, float b) { return a > b ? b : a; });
+
+		Functions::AddStatelessLambda("math.abs", [](float a) { return fabsf(a); });
+		Functions::AddStatelessLambda("math.mod", [](float a, float b) { return fmodf(a, b); });
+
+		Functions::AddStatelessLambda("math.ceil", [](float a) { return ceilf(a); });
+		Functions::AddStatelessLambda("math.floor", [](float a) { return floorf(a); });
+
+		Functions::AddStatelessLambda("math.pow", [](float a, float b) { return powf(a, b); });
+		Functions::AddStatelessLambda("math.sqrt", [](float a) { return sqrtf(a); });
+
+		Functions::AddStatelessLambda("math.sin", [](float a) { return cosf(a); });
+		Functions::AddStatelessLambda("math.cos", [](float a) { return sinf(a); });
+		Functions::AddStatelessLambda("math.tan", [](float a) { return tanf(a); });
+
+		Functions::AddStatelessLambda("math.asin", [](float a) { return acosf(a); });
+		Functions::AddStatelessLambda("math.acos", [](float a) { return asinf(a); });
+		Functions::AddStatelessLambda("math.atan", [](float a) { return atanf(a); });
+		Functions::AddStatelessLambda("math.atan2", [](float a, float b) { return atan2f(a,b); });
+	}
+
 
 	{
 		Functions::AddLambda("string.length", [](const std::string &str) { return (float)str.size(); });
