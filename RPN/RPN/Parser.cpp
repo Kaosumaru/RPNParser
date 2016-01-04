@@ -4,6 +4,7 @@
 #include "MiscTokens.h"
 #include "Utils.h"
 #include <map>
+#include <cmath>
 
 using namespace RPN;
 
@@ -163,6 +164,7 @@ void _InitializeParser()
 	Functions::AddStatelessLambda("if", [](float c, float a, float b) { return c != 0.0f ? a : b; });
 
 	{
+		using namespace std;
 		Functions::AddStatelessLambda("math.max", [](float a, float b) { return a > b ? a : b; });
 		Functions::AddStatelessLambda("math.min", [](float a, float b) { return a > b ? b : a; });
 
