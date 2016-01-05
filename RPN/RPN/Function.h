@@ -179,7 +179,7 @@ namespace RPN
 
 				auto ctx = c.call((uint64_t)func, kFuncConvHost, FuncBuilderVariadic<Ret, Args...>());
 				for (size_t i = 0; i < args.size(); i++)
-					ctx->setArg(i, args[i]);
+					ctx->setArg((uint32_t)i, args[i]);
 				ctx->setRet(0, out);
 
 
