@@ -267,6 +267,7 @@ Parser::CompiledFunction Parser::Compile(const std::string& text)
 	c.addFunc(FuncBuilder0<float>(kCallConvHost));
 	c.ret(token->Compile(c));
 	c.endFunc();
+	c.finalize();
 
 	auto pointer = asmjit_cast<FunctionPtr>(a.make());
 
