@@ -149,37 +149,37 @@ namespace RPN
 		template<typename Ret, typename ...Args>
 		struct FuncBuilderVariadic_Impl<0, Ret, Args...> : asmjit::FuncBuilder0<Ret> 
 		{
-			using FuncBuilder0::FuncBuilder0;
+			using asmjit::FuncBuilder0<Ret>::FuncBuilder0;
 		};
 														   
 		template<typename Ret, typename ...Args>		   
 		struct FuncBuilderVariadic_Impl<1, Ret, Args...> : asmjit::FuncBuilder1<Ret, Args...> 
 		{
-			using FuncBuilder1::FuncBuilder1;
+			using asmjit::FuncBuilder1<Ret, Args...> ::FuncBuilder1;
 		};
 														   
 		template<typename Ret, typename ...Args>		   
 		struct FuncBuilderVariadic_Impl<2, Ret, Args...> : asmjit::FuncBuilder2<Ret, Args...> 
 		{
-			using FuncBuilder2::FuncBuilder2;
+			using asmjit::FuncBuilder2<Ret, Args...> ::FuncBuilder2;
 		};
 														   
 		template<typename Ret, typename ...Args>		   
 		struct FuncBuilderVariadic_Impl<3, Ret, Args...> : asmjit::FuncBuilder3<Ret, Args...> 
 		{
-			using FuncBuilder3::FuncBuilder3;
+			using asmjit::FuncBuilder3<Ret, Args...> ::FuncBuilder3;
 		};
 														   
 		template<typename Ret, typename ...Args>		   
 		struct FuncBuilderVariadic_Impl<4, Ret, Args...> : asmjit::FuncBuilder4<Ret, Args...> 
 		{
-			using FuncBuilder4::FuncBuilder4;
+			using asmjit::FuncBuilder4<Ret, Args...>::FuncBuilder4;
 		};
 
 		template<typename Ret, typename ...Args>
 		struct FuncBuilderVariadic : public FuncBuilderVariadic_Impl<sizeof...(Args), Ret, Args...>
 		{
-			using FuncBuilderVariadic_Impl::FuncBuilderVariadic_Impl;
+			using FuncBuilderVariadic_Impl<sizeof...(Args), Ret, Args...>::FuncBuilderVariadic_Impl;
 		};
 
 		template<typename Ret, typename ...Args>
