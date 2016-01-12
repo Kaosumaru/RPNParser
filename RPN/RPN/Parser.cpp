@@ -189,6 +189,7 @@ void _InitializeParser()
 
 
 	{
+		Functions::AddLambda("string.equal", [](const std::string &str, const std::string &str2) { return str == str2 ? 1.0f : 0.0f; });
 		Functions::AddLambda("string.length", [](const std::string &str) { return (float)str.size(); });
 		Functions::AddLambda("string.join", [](const std::vector<TokenPtr>& tokens) 
 		{
