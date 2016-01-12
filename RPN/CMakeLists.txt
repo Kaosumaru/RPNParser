@@ -40,6 +40,8 @@ include("${ASMJIT_DIR}/CMakeLists.txt")
 set(RPN_Includes ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR} ${ASMJIT_DIR}/src/ PARENT_SCOPE)
 set(RPN_Deps ${ASMJIT_DEPS} PARENT_SCOPE)
 
+include_directories (${ASMJIT_DIR}/src/)
+
 add_library(RPN ${RPN_SRCS} ${ASMJIT_SRC})
 
 ##dependencies

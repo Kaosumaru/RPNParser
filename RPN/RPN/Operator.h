@@ -42,7 +42,7 @@ namespace RPN
 			using namespace asmjit;
 			auto token = _token->Compile(c);
 
-			X86XmmVar minus(c);
+			auto minus = c.newXmmSs();
 			setXmmVariable(c, minus, -1.0f);
 			c.mulss(token, minus);
 			return token;
@@ -154,7 +154,7 @@ namespace RPN
 
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
-			asmjit::X86XmmVar out(c, asmjit::kX86VarTypeXmmSs);
+			auto out = c.newXmmSs();
 			setXmmVariable(c, out, 1.0f);
 			c.cmpss(o1, o2, (int)_imm);
 			c.andps(out, o1);
@@ -229,7 +229,7 @@ namespace RPN
 		{
 			c.andps(o1, o2);
 
-			asmjit::X86XmmVar zero(c, asmjit::kX86VarTypeXmmSs);
+			auto zero = c.newXmmSs();
 			setXmmVariable(c, zero, 0.0f);
 			c.cmpss(o1, zero, 4); //o1 != zero
 
@@ -248,7 +248,7 @@ namespace RPN
 		{
 			c.orps(o1, o2);
 
-			asmjit::X86XmmVar zero(c, asmjit::kX86VarTypeXmmSs);
+			auto zero = c.newXmmSs();
 			setXmmVariable(c, zero, 0.0f);
 			c.cmpss(o1, zero, 4); //o1 != zero
 

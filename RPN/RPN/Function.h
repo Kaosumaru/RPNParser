@@ -147,24 +147,39 @@ namespace RPN
 		struct FuncBuilderVariadic_Impl {};
 
 		template<typename Ret, typename ...Args>
-		struct FuncBuilderVariadic_Impl<0, Ret, Args...> : asmjit::FuncBuilder0<Ret> {};
+		struct FuncBuilderVariadic_Impl<0, Ret, Args...> : asmjit::FuncBuilder0<Ret> 
+		{
+			using FuncBuilder0::FuncBuilder0;
+		};
 														   
 		template<typename Ret, typename ...Args>		   
-		struct FuncBuilderVariadic_Impl<1, Ret, Args...> : asmjit::FuncBuilder1<Ret, Args...> {};
+		struct FuncBuilderVariadic_Impl<1, Ret, Args...> : asmjit::FuncBuilder1<Ret, Args...> 
+		{
+			using FuncBuilder1::FuncBuilder1;
+		};
 														   
 		template<typename Ret, typename ...Args>		   
-		struct FuncBuilderVariadic_Impl<2, Ret, Args...> : asmjit::FuncBuilder2<Ret, Args...> {};
+		struct FuncBuilderVariadic_Impl<2, Ret, Args...> : asmjit::FuncBuilder2<Ret, Args...> 
+		{
+			using FuncBuilder2::FuncBuilder2;
+		};
 														   
 		template<typename Ret, typename ...Args>		   
-		struct FuncBuilderVariadic_Impl<3, Ret, Args...> : asmjit::FuncBuilder3<Ret, Args...> {};
+		struct FuncBuilderVariadic_Impl<3, Ret, Args...> : asmjit::FuncBuilder3<Ret, Args...> 
+		{
+			using FuncBuilder3::FuncBuilder3;
+		};
 														   
 		template<typename Ret, typename ...Args>		   
-		struct FuncBuilderVariadic_Impl<4, Ret, Args...> : asmjit::FuncBuilder4<Ret, Args...> {};
+		struct FuncBuilderVariadic_Impl<4, Ret, Args...> : asmjit::FuncBuilder4<Ret, Args...> 
+		{
+			using FuncBuilder4::FuncBuilder4;
+		};
 
 		template<typename Ret, typename ...Args>
 		struct FuncBuilderVariadic : public FuncBuilderVariadic_Impl<sizeof...(Args), Ret, Args...>
 		{
-
+			using FuncBuilderVariadic_Impl::FuncBuilderVariadic_Impl;
 		};
 
 		template<typename Ret, typename ...Args>
@@ -175,9 +190,9 @@ namespace RPN
 			static asmjit::X86XmmVar callFunction(asmjit::X86Compiler &c, FuncType func, const std::vector<asmjit::X86XmmVar>& args)
 			{
 				using namespace asmjit;
-				X86XmmVar out(c, kX86VarTypeXmmSs);
+				auto out = c.newXmmSs();
 
-				auto ctx = c.call((uint64_t)func, kFuncConvHost, FuncBuilderVariadic<Ret, Args...>());
+				auto ctx = c.call((uint64_t)func, FuncBuilderVariadic<Ret, Args...>(kCallConvHost));
 				for (size_t i = 0; i < args.size(); i++)
 					ctx->setArg((uint32_t)i, args[i]);
 				ctx->setRet(0, out);

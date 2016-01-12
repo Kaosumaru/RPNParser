@@ -24,11 +24,12 @@ asmjit::X86XmmVar Token::Compile(asmjit::X86Compiler& c)
 {
 	using namespace asmjit;
 
-	X86XmmVar out(c, kX86VarTypeXmmSs, "OutToken");
-	X86GpVar arg(c, kVarTypeIntPtr, "PointerToToken");
+	auto out = c.newXmmSs("OutToken");
+	auto arg = c.newIntPtr("PointerToToken");
+
 	c.mov(arg, imm_ptr(this));
 
-	auto ctx = c.call((uint64_t)&impl::value_of_token, kFuncConvHost, FuncBuilder1<float, Token*>());
+	auto ctx = c.call((uint64_t)&impl::value_of_token, FuncBuilder1<float, Token*>(kCallConvHost));
 	ctx->setArg(0, arg);
 	ctx->setRet(0, out);
 

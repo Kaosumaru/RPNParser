@@ -55,7 +55,7 @@ namespace RPN
 	}
 
 	void setXmmVariable(asmjit::X86Compiler &c, asmjit::XmmVar &v, float d) {
-		asmjit::X86GpVar temp = c.newGpVar();
+		auto temp = c.newIntPtr("PointerToToken");
 		uint32_t *dd = (uint32_t *)(&d);
 		c.mov(temp, *dd);
 		c.movd(v, temp.m());

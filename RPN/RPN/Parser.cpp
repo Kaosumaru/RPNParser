@@ -258,15 +258,17 @@ Parser::CompiledFunction Parser::Compile(const std::string& text)
 
 	auto& runtime = impl::jitRuntime();
 	StringLogger logger;
-	X86Compiler c(&runtime);
-	c.setLogger(&logger);
+
+	X86Assembler a(&runtime);
+	X86Compiler c(&a);
+	a.setLogger(&logger);
 
 
-	c.addFunc(kFuncConvHost, FuncBuilder0<float>());
+	c.addFunc(FuncBuilder0<float>(kCallConvHost));
 	c.ret(token->Compile(c));
 	c.endFunc();
 
-	auto pointer = asmjit_cast<FunctionPtr>(c.make());
+	auto pointer = asmjit_cast<FunctionPtr>(a.make());
 
 	return{ pointer , std::move(token) };
 }
