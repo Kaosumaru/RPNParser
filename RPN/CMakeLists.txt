@@ -33,7 +33,7 @@ endif(MSVC)
 add_folder(RPN)
 
 set(ASMJIT_EMBED TRUE)
-add_definitions(-DASMJIT_STATIC)
+add_definitions(-DASMJIT_STATIC -DRPN_USE_JIT)
 set(ASMJIT_DIR ${PROJECT_SOURCE_DIR}/../asmjit/ )
 include("${ASMJIT_DIR}/CMakeLists.txt")
 

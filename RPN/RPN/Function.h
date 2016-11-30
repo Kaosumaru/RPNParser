@@ -142,7 +142,7 @@ namespace RPN
 			}
 		};
 
-#ifdef MX_JIT
+#ifdef RPN_USE_JIT
 		template<unsigned I, typename Ret, typename ...Args>
 		struct FuncBuilderVariadic_Impl {};
 
@@ -343,7 +343,7 @@ namespace RPN
 			return a + b;
 		}
 
-#ifdef MX_JIT
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;

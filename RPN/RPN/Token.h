@@ -4,7 +4,7 @@
 #include <vector>
 #include <stack>
 #include <sstream>
-#ifdef MX_JIT
+#ifdef RPN_USE_JIT
 #include <asmjit/asmjit.h>
 #endif
 #include <cassert>
@@ -53,7 +53,7 @@ namespace RPN
 
 		virtual void Parse(ParserContext &) {}
 
-#ifdef MX_JIT
+#ifdef RPN_USE_JIT
 		virtual asmjit::X86XmmVar Compile(asmjit::X86Compiler& c);
 #endif
 	};
@@ -98,7 +98,7 @@ namespace RPN
 
 		VariableType returnType() override { return VariableType::Float; }
 
-#ifdef MX_JIT
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
