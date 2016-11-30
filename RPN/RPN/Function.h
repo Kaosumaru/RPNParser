@@ -142,7 +142,7 @@ namespace RPN
 			}
 		};
 
-
+#ifdef MX_JIT
 		template<unsigned I, typename Ret, typename ...Args>
 		struct FuncBuilderVariadic_Impl {};
 
@@ -201,7 +201,7 @@ namespace RPN
 				return out;
 			}
 		};
-
+#endif
 	}
 
 	template<typename R, typename... Args>
@@ -343,7 +343,7 @@ namespace RPN
 			return a + b;
 		}
 
-
+#ifdef MX_JIT
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
@@ -356,6 +356,7 @@ namespace RPN
 			auto out = impl::FuncCaller<R, Args...>::callFunction(c, _func, arguments);
 			return out;
 		}
+#endif
 
 	protected:
 		FuncPointer _func;

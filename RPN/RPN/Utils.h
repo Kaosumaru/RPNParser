@@ -5,7 +5,9 @@
 #include <map>
 #include <memory>
 #include <sstream>
+#ifdef MX_JIT
 #include <asmjit/asmjit.h>
+#endif
 
 namespace RPN
 {
@@ -13,8 +15,9 @@ namespace RPN
 
 	std::string eat_string_in_stream(std::stringstream &ss, const std::function<bool(char c, int index)>& isAllowed);
 
-
+#ifdef MX_JIT
 	void setXmmVariable(asmjit::X86Compiler &c, asmjit::XmmVar &v, float d);
+#endif
 }
 
 #endif

@@ -4,7 +4,9 @@
 #include <vector>
 #include <stack>
 #include <sstream>
+#ifdef MX_JIT
 #include <asmjit/asmjit.h>
+#endif
 #include <cassert>
 #include "Utils.h"
 
@@ -51,7 +53,9 @@ namespace RPN
 
 		virtual void Parse(ParserContext &) {}
 
+#ifdef MX_JIT
 		virtual asmjit::X86XmmVar Compile(asmjit::X86Compiler& c);
+#endif
 	};
 
 	typedef std::unique_ptr<Token> TokenPtr;
@@ -94,6 +98,7 @@ namespace RPN
 
 		VariableType returnType() override { return VariableType::Float; }
 
+#ifdef MX_JIT
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
@@ -101,6 +106,7 @@ namespace RPN
 			setXmmVariable(c, out, _value);
 			return out;
 		}
+#endif
 
 	protected:
 		float _value;
