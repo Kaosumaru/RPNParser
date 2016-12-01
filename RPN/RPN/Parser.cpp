@@ -13,6 +13,7 @@ std::map<std::string, std::function<Token*(Parser::Context &context)>> Functions
 
 namespace RPN
 {
+#ifdef RPN_USE_JIT
 	namespace impl
 	{
 		asmjit::JitRuntime& jitRuntime()
@@ -22,7 +23,7 @@ namespace RPN
 		}
 		
 	};
-
+#endif
 
 	bool rule_whitespace_eater(Parser::Context &context)
 	{
@@ -154,8 +155,10 @@ namespace RPN
 
 void Parser::CompiledFunction::Release()
 {
+#ifdef RPN_USE_JIT
 	auto& runtime = impl::jitRuntime();
 	runtime.release((void*)_function);
+#endif
 }
 
 
@@ -249,12 +252,13 @@ Parser::Parser()
 
 Parser::CompiledFunction Parser::Compile(const std::string& text)
 {
-	using namespace asmjit;
 	auto token = Parse(text);
 
 	if (!token)
 		return {};
 
+#ifdef RPN_USE_JIT
+	using namespace asmjit;
 
 	auto& runtime = impl::jitRuntime();
 	StringLogger logger;
@@ -272,4 +276,7 @@ Parser::CompiledFunction Parser::Compile(const std::string& text)
 	auto pointer = asmjit_cast<FunctionPtr>(a.make());
 
 	return{ pointer , std::move(token) };
+#else
+	return{ nullptr , std::move(token) };
+#endif
 }

@@ -53,7 +53,7 @@ namespace RPN
 
 		return std::string(buffer.get(), length);
 	}
-
+#ifdef RPN_USE_JIT
 	void setXmmVariable(asmjit::X86Compiler &c, asmjit::XmmVar &v, float d) {
 		auto temp = c.newIntPtr("PointerToToken");
 		uint32_t *dd = (uint32_t *)(&d);
@@ -61,6 +61,6 @@ namespace RPN
 		c.movd(v, temp.m());
 		c.unuse(temp);
 	}
-
+#endif
 }
 

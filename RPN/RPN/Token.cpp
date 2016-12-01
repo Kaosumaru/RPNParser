@@ -20,6 +20,7 @@ namespace RPN
 	}
 }
 
+#ifdef RPN_USE_JIT
 asmjit::X86XmmVar Token::Compile(asmjit::X86Compiler& c)
 {
 	using namespace asmjit;
@@ -35,6 +36,7 @@ asmjit::X86XmmVar Token::Compile(asmjit::X86Compiler& c)
 
 	return out;
 }
+#endif
 
 
 std::unique_ptr<Token> ParserContext::popAndParseToken()

@@ -36,7 +36,7 @@ namespace RPN
 	{
 	public:
 		float value() override { return -token_value(); }
-
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
@@ -47,6 +47,7 @@ namespace RPN
 			c.mulss(token, minus);
 			return token;
 		}
+#endif
 	};
     
 
@@ -65,6 +66,7 @@ namespace RPN
 			_tokens[0] = tokens.popAndParseToken();
 		}
 		
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar Compile(asmjit::X86Compiler& c) override
 		{
 			using namespace asmjit;
@@ -78,7 +80,7 @@ namespace RPN
 		{
 			return o1;
 		}
-
+#endif
 
 		float value_of(unsigned index) { return _tokens[index]->value(); }
 
@@ -91,11 +93,13 @@ namespace RPN
 	public:
 		float value() override { return value_of(0) + value_of(1); }
 
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			c.addss(o1, o2);
 			return o1;
 		}
+#endif
 	};
 
 	class BinaryMinusOperator : public BinaryOperator
@@ -103,11 +107,13 @@ namespace RPN
 	public:
 		float value() override { return value_of(0) - value_of(1); }
 
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			c.subss(o1, o2);
 			return o1;
 		}
+#endif
 	};
 
 	class BinaryMultiplyOperator : public BinaryOperator
@@ -116,11 +122,13 @@ namespace RPN
 		float value() override { return value_of(0) * value_of(1); }
 		int precedence() override { return 3; }
 
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			c.mulss(o1, o2);
 			return o1;
 		}
+#endif
 	};
 
 	class BinaryDivisionOperator : public BinaryOperator
@@ -129,11 +137,13 @@ namespace RPN
 		float value() override { return value_of(0) / value_of(1); }
 		int precedence() override { return 3; }
 
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			c.divss(o1, o2);
 			return o1;
 		}
+#endif
 	};
 
 
@@ -152,6 +162,7 @@ namespace RPN
 			Ordered,
 		};
 
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			auto out = c.newXmmSs();
@@ -160,6 +171,7 @@ namespace RPN
 			c.andps(out, o1);
 			return out;
 		}
+#endif
 
 		Operator _imm = Operator::Equal;
 	};
@@ -225,6 +237,8 @@ namespace RPN
 	public:
 		float value() override { return (value_of(0) && value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 13; }
+
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			c.andps(o1, o2);
@@ -237,6 +251,7 @@ namespace RPN
 			c.andps(o1, zero);
 			return o1;
 		}
+#endif
 	};
 
 	class BinaryOrOperator : public BinaryOperator
@@ -244,6 +259,8 @@ namespace RPN
 	public:
 		float value() override { return (value_of(0) || value_of(1)) ? 1.0f : 0.0f; }
 		int precedence() override { return 14; }
+
+#ifdef RPN_USE_JIT
 		asmjit::X86XmmVar BinaryCompile(asmjit::X86Compiler& c, asmjit::X86XmmVar& o1, asmjit::X86XmmVar &o2) override
 		{
 			c.orps(o1, o2);
@@ -256,6 +273,7 @@ namespace RPN
 			c.andps(o1, zero);
 			return o1;
 		}
+#endif
 	};
 
 

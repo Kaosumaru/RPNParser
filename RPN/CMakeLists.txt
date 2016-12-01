@@ -32,15 +32,20 @@ endif(MSVC)
 ##folders
 add_folder(RPN)
 
-set(ASMJIT_EMBED TRUE)
-add_definitions(-DASMJIT_STATIC -DRPN_USE_JIT)
-set(ASMJIT_DIR ${PROJECT_SOURCE_DIR}/../asmjit/ )
-include("${ASMJIT_DIR}/CMakeLists.txt")
+option(RPN_USE_JIT "use asm jit" YES)
+
+if (RPN_USE_JIT)
+    set(ASMJIT_EMBED TRUE)
+    add_definitions(-DASMJIT_STATIC -DRPN_USE_JIT)
+    set(ASMJIT_DIR ${PROJECT_SOURCE_DIR}/../asmjit/ )
+    include("${ASMJIT_DIR}/CMakeLists.txt")
+    include_directories (${ASMJIT_DIR}/src/)
+
+    set(RPN_Deps ${ASMJIT_DEPS} PARENT_SCOPE)
+endif(RPN_USE_JIT)
 
 set(RPN_Includes ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR} ${ASMJIT_DIR}/src/ PARENT_SCOPE)
-set(RPN_Deps ${ASMJIT_DEPS} PARENT_SCOPE)
 
-include_directories (${ASMJIT_DIR}/src/)
 
 add_library(RPN ${RPN_SRCS} ${ASMJIT_SRC})
 
