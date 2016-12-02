@@ -24,10 +24,13 @@ endmacro()
 
 project (RPN)
 
-
 if (MSVC)
 add_definitions( "/W3 /D_CRT_SECURE_NO_WARNINGS /wd4018 /wd4005 /wd4996 /nologo" )
 endif(MSVC)
+
+if (EMSCRIPTEN)
+  add_definitions("-std=c++14")
+endif (EMSCRIPTEN)
 
 ##folders
 add_folder(RPN)
