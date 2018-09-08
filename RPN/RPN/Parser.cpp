@@ -79,7 +79,7 @@ namespace RPN
 			{ '+', [](Parser::Context &context) { return new BinaryPlusOperator; } },
 			{ '-', [](Parser::Context &context) -> Token*
                 {
-                    if (context.last_operator_type == Token::Type::None || context.last_operator_type == Token::Type::LeftParenthesis || context.last_operator_type == Token::Type::Operator)
+                    if (context.last_operator_type == Token::Type::None || context.last_operator_type == Token::Type::LeftParenthesis || context.last_operator_type == Token::Type::Operator || context.last_operator_type == Token::Type::FunctionArgumentSeparator)
                         return new UnaryMinusOperator;
                     return new BinaryMinusOperator;
                 } },
