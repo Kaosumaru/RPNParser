@@ -188,6 +188,10 @@ void _InitializeParser()
 		Functions::AddStatelessLambda("math.acos", [](float a) { return asinf(a); });
 		Functions::AddStatelessLambda("math.atan", [](float a) { return atanf(a); });
 		Functions::AddStatelessLambda("math.atan2", [](float a, float b) { return atan2f(a,b); });
+
+		static float pi = 3.14159265358979323846;
+		Functions::AddStatelessLambda("math.PI", []() { return pi; });
+		Functions::AddStatelessLambda("math.PI2", []() { return pi*2.0f; });
 	}
 
 
